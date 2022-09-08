@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "maxNodeModuleJsDepth": 5,
+    "downlevelIteration": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "lib": ["es6", "dom"],
+    "baseUrl": "."
+  },
+  "files": [
+    "./references.d.ts",
+    "./src/solid-native-jsx.ts",
+    "./src/nativescript-jsx.ts"
+  ]
+}

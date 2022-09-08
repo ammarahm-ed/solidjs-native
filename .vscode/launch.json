@@ -1,0 +1,53 @@
+{
+  "configurations": [
+    {
+      "name": "Attach on iOS",
+      "type": "nativescript",
+      "request": "attach",
+      "platform": "ios",
+      "appRoot": "${workspaceRoot}",
+      "sourceMaps": true,
+      "watch": false,
+      "sourceMapPathOverrides": {
+        "webpack://app/./*": "${workspaceRoot}/*"
+      }
+    },
+
+    {
+      "name": "Launch on iOS",
+      "type": "nativescript",
+      "request": "launch",
+      "platform": "ios",
+      "appRoot": "${workspaceRoot}",
+      "sourceMaps": true,
+      "watch": true,
+      "sourceMapPathOverrides": {
+        "webpack://app/./*": "${workspaceRoot}/*"
+      }
+    },
+    {
+      "name": "Launch on Android",
+      "type": "nativescript",
+      "request": "launch",
+      "platform": "android",
+      "appRoot": "${workspaceRoot}",
+      "sourceMaps": true,
+      "watch": true,
+      "sourceMapPathOverrides": {
+        "webpack://app/./*": "${workspaceRoot}/*"
+      }
+    },
+    {
+      "name": "Attach on Android",
+      "type": "nativescript",
+      "request": "attach",
+      "platform": "android",
+      "appRoot": "${workspaceRoot}",
+      "sourceMaps": true,
+      "watch": false,
+      "sourceMapPathOverrides": {
+        "webpack://app/./*": "${workspaceRoot}/*"
+      }
+    }
+  ]
+}
