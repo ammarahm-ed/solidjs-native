@@ -1,0 +1,2710 @@
+diff --git a/node_modules/solid-js/dist/dev.js b/node_modules/solid-js/dist/dev.js
+index eeb65e2..f34e894 100644
+--- a/node_modules/solid-js/dist/dev.js
++++ b/node_modules/solid-js/dist/dev.js
+@@ -166,6 +166,7 @@ function createRoot(fn, detachedOwner) {
+         updateFn = unowned ? () => fn(() => {
+     throw new Error("Dispose method must be an explicit argument to createRoot function");
+   })  : () => fn(() => untrack(() => cleanNode(root)));
++ 
+   {
+     if (owner) root.name = `${owner.name}-r${rootCount++}`;
+     globalThis._$afterCreateRoot && globalThis._$afterCreateRoot(root);
+@@ -187,6 +188,7 @@ function createSignal(value, options) {
+     observerSlots: null,
+     comparator: options.equals || undefined
+   };
++  
+   if (!options.internal) s.name = registerGraph(options.name || hashValue(value), s);
+   const setter = value => {
+     if (typeof value === "function") {
+@@ -518,11 +520,13 @@ function devComponent(Comp, props) {
+     });
+     return Comp(props);
+   }), undefined, true);
++  
+   c.observers = null;
+   c.observerSlots = null;
+   c.state = 0;
+   c.componentName = Comp.name;
+   updateComputation(c);
++
+   return c.tValue !== undefined ? c.tValue : c.value;
+ }
+ function hashValue(v) {
+@@ -1558,6 +1562,7 @@ function Suspense(props) {
+   if (listContext) show = listContext.register(store.inFallback);
+   let dispose;
+   onCleanup(() => dispose && dispose());
++  
+   return createComponent(SuspenseContext.Provider, {
+     value: store,
+     get children() {
+diff --git a/node_modules/solid-js/package.json b/node_modules/solid-js/package.json
+index 79c1d70..3134cce 100644
+--- a/node_modules/solid-js/package.json
++++ b/node_modules/solid-js/package.json
+@@ -9,180 +9,66 @@
+     "type": "git",
+     "url": "https://github.com/solidjs/solid"
+   },
+-  "main": "./dist/server.cjs",
+-  "module": "./dist/server.js",
+-  "browser": {
+-    "./dist/server.cjs": "./dist/solid.cjs",
+-    "./dist/server.js": "./dist/solid.js"
+-  },
+-  "unpkg": "./dist/solid.cjs",
+   "types": "types/index.d.ts",
+-  "sideEffects": false,
+-  "type": "module",
+-  "files": [
+-    "dist",
+-    "store/dist",
+-    "store/types",
+-    "store/package.json",
+-    "web/dist",
+-    "web/types",
+-    "web/package.json",
+-    "h/dist",
+-    "h/types",
+-    "h/package.json",
+-    "h/jsx-runtime/dist",
+-    "h/jsx-runtime/types",
+-    "h/jsx-runtime/package.json",
+-    "html/dist",
+-    "html/types",
+-    "html/package.json",
+-    "universal/dist",
+-    "universal/types",
+-    "universal/package.json",
+-    "types",
+-    "jsx-runtime.d.ts"
+-  ],
+   "exports": {
+     ".": {
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./types/index.d.ts",
+-            "default": "./dist/dev.js"
+-          },
+-          "require": "./dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/solid.js"
+-        },
+-        "require": "./dist/solid.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+       "development": {
+         "import": {
+           "types": "./types/index.d.ts",
+           "default": "./dist/dev.js"
+         },
+-        "require": "./dist/dev.cjs"
++        "require": "./dist/dev.js"
+       },
+       "import": {
+         "types": "./types/index.d.ts",
+         "default": "./dist/solid.js"
+       },
+-      "require": "./dist/solid.cjs"
++      "require": "./dist/solid.js"
+     },
+     "./dist/*": "./dist/*",
+-    "./jsx-runtime": {
+-      "types": "./types/jsx.d.ts",
+-      "default": "./dist/solid.js"
+-    },
+     "./store": {
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./store/types/index.d.ts",
+-            "default": "./store/dist/dev.js"
+-          },
+-          "require": "./store/dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./store/types/index.d.ts",
+-          "default": "./store/dist/store.js"
+-        },
+-        "require": "./store/dist/store.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./store/types/index.d.ts",
+-          "default": "./store/dist/server.js"
+-        },
+-        "require": "./store/dist/server.cjs"
+-      },
+       "development": {
+         "import": {
+           "types": "./store/types/index.d.ts",
+           "default": "./store/dist/dev.js"
+         },
+-        "require": "./store/dist/dev.cjs"
++        "require": "./store/dist/dev.js"
+       },
+       "import": {
+         "types": "./store/types/index.d.ts",
+         "default": "./store/dist/store.js"
+       },
+-      "require": "./store/dist/store.cjs"
++      "require": "./store/dist/store.js"
+     },
+     "./store/dist/*": "./store/dist/*",
+     "./web": {
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./web/types/index.d.ts",
+-            "default": "./web/dist/dev.js"
+-          },
+-          "require": "./web/dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./web/types/index.d.ts",
+-          "default": "./web/dist/web.js"
+-        },
+-        "require": "./web/dist/web.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./web/types/index.d.ts",
+-          "default": "./web/dist/server.js"
+-        },
+-        "require": "./web/dist/server.cjs"
+-      },
+       "development": {
+         "import": {
+           "types": "./web/types/index.d.ts",
+           "default": "./web/dist/dev.js"
+         },
+-        "require": "./web/dist/dev.cjs"
++        "require": "./web/dist/dev.js"
+       },
+       "import": {
+         "types": "./web/types/index.d.ts",
+         "default": "./web/dist/web.js"
+       },
+-      "require": "./web/dist/web.cjs"
++      "require": "./web/dist/web.js"
+     },
+     "./web/dist/*": "./web/dist/*",
+-    "./universal": {
+-      "development": {
+-        "import": {
+-          "types": "./universal/types/index.d.ts",
+-          "default": "./universal/dist/dev.js"
+-        },
+-        "require": "./universal/dist/dev.cjs"
+-      },
+-      "import": {
+-        "types": "./universal/types/index.d.ts",
+-        "default": "./universal/dist/universal.js"
+-      },
+-      "require": "./universal/dist/universal.cjs"
+-    },
+-    "./universal/dist/*": "./universal/dist/*",
+     "./h": {
+       "import": {
+         "types": "./h/types/index.d.ts",
+         "default": "./h/dist/h.js"
+       },
+-      "require": "./h/dist/h.cjs"
++      "require": "./h/dist/h.js"
+     },
+     "./h/jsx-runtime": {
+       "import": {
+         "types": "./h/jsx-runtime/types/index.d.ts",
+         "default": "./h/jsx-runtime/dist/jsx.js"
+       },
+-      "require": "./h/jsx-runtime/dist/jsx.cjs"
++      "require": "./h/jsx-runtime/dist/jsx.js"
+     },
+     "./h/dist/*": "./h/dist/*",
+     "./html": {
+@@ -190,10 +76,35 @@
+         "types": "./html/types/index.d.ts",
+         "default": "./html/dist/html.js"
+       },
+-      "require": "./html/dist/html.cjs"
++      "require": "./html/dist/html.js"
+     },
+     "./html/dist/*": "./html/dist/*"
+   },
++  "sideEffects": false,
++  "type": "module",
++  "files": [
++    "dist",
++    "store/dist",
++    "store/types",
++    "store/package.json",
++    "web/dist",
++    "web/types",
++    "web/package.json",
++    "h/dist",
++    "h/types",
++    "h/package.json",
++    "h/jsx-runtime/dist",
++    "h/jsx-runtime/types",
++    "h/jsx-runtime/package.json",
++    "html/dist",
++    "html/types",
++    "html/package.json",
++    "universal/dist",
++    "universal/types",
++    "universal/package.json",
++    "types",
++    "jsx-runtime.d.ts"
++  ],
+   "keywords": [
+     "solid",
+     "solidjs",
+diff --git a/node_modules/solid-js/store/package.json b/node_modules/solid-js/store/package.json
+deleted file mode 100644
+index b71ea77..0000000
+--- a/node_modules/solid-js/store/package.json
++++ /dev/null
+@@ -1,50 +0,0 @@
+-{
+-  "name": "solid-js/store",
+-  "main": "./dist/server.cjs",
+-  "module": "./dist/server.js",
+-  "browser": {
+-    "./dist/server.cjs": "./dist/store.cjs",
+-    "./dist/server.js": "./dist/store.js"
+-  },
+-  "unpkg": "./dist/store.cjs",
+-  "types": "./types/index.d.ts",
+-  "type": "module",
+-  "sideEffects": false,
+-  "exports": {
+-    ".": {
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./types/index.d.ts",
+-            "default": "./dist/dev.js"
+-          },
+-          "require": "./dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/store.js"
+-        },
+-        "require": "./dist/store.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+-      "development": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/dev.js"
+-        },
+-        "require": "./dist/dev.cjs"
+-      },
+-      "import": {
+-        "types": "./types/index.d.ts",
+-        "default": "./dist/store.js"
+-      },
+-      "require": "./dist/store.cjs"
+-    }
+-  }
+-}
+diff --git a/node_modules/solid-js/web/dist/dev.cjs b/node_modules/solid-js/web/dist/dev.cjs
+index 29dac53..d998fdf 100644
+--- a/node_modules/solid-js/web/dist/dev.cjs
++++ b/node_modules/solid-js/web/dist/dev.cjs
+@@ -3,6 +3,7 @@
+ Object.defineProperty(exports, '__esModule', { value: true });
+ 
+ var solidJs = require('solid-js');
++var {parse} = require("node-html-parser");
+ 
+ const booleans = ["allowfullscreen", "async", "autofocus", "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden", "indeterminate", "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless", "selected"];
+ const Properties = /*#__PURE__*/new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
+@@ -106,14 +107,25 @@ function render(code, element, init) {
+     element.textContent = "";
+   };
+ }
++
++function createElementFromAst(ast) {
++  const element = document.createElement(ast.tagName?.toLowerCase());
++  for (let i=0;i < ast.childNodes.length; i++) {
++    element.appendChild(createElementFromAst(ast.childNodes[i]));
++  }
++  console.log('returning:',element);
++  return element;
++}
++
+ function template(html, check, isSVG) {
+-  const t = document.createElement("template");
+-  t.innerHTML = html;
+-  if (check && t.innerHTML.split("<").length - 1 !== check) throw `The browser resolved template HTML does not match JSX input:\n${t.innerHTML}\n\n${html}. Is your HTML properly formed?`;
+-  let node = t.content.firstChild;
+-  if (isSVG) node = node.firstChild;
+-  return node;
++  if (check && html.split("<").length - 1 !== check) throw `The browser resolved template HTML does not match JSX input:\n${html}\n\n${html}. Is your HTML properly formed?`;
++  const ast = parse(html).childNodes[0]
++  return {
++    cloneNode: () => createElementFromAst(ast),
++  };
+ }
++
++
+ function delegateEvents(eventNames, document = window.document) {
+   const e = document[$$EVENTS] || (document[$$EVENTS] = new Set());
+   for (let i = 0, l = eventNames.length; i < l; i++) {
+@@ -368,7 +380,7 @@ function eventHandler(e) {
+       data !== undefined ? handler.call(node, data, e) : handler.call(node, e);
+       if (e.cancelBubble) return;
+     }
+-    node = node.host && node.host !== node && node.host instanceof Node ? node.host : node.parentNode;
++    node = node.host && node.host !== node && node.host.childNodes ? node.host : node.parentNode;
+   }
+ }
+ function spreadExpression(node, props, prevProps = {}, isSVG, skipChildren) {
+@@ -436,7 +448,7 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+       appendNodes(parent, array);
+     }
+     current = array;
+-  } else if (value instanceof Node) {
++  } else if (value && value.childNodes) {
+     if (solidJs.sharedConfig.context && value.parentNode) return current = multi ? [value] : value;
+     if (Array.isArray(current)) {
+       if (multi) return current = cleanChildren(parent, current, marker, value);
+@@ -453,7 +465,7 @@ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   for (let i = 0, len = array.length; i < len; i++) {
+     let item = array[i],
+         prev = current && current[i];
+-    if (item instanceof Node) {
++    if (item && item.childNodes) {
+       normalized.push(item);
+     } else if (item == null || item === true || item === false) ; else if (Array.isArray(item)) {
+       dynamic = normalizeIncomingArray(normalized, item, prev) || dynamic;
+diff --git a/node_modules/solid-js/web/dist/dev.js b/node_modules/solid-js/web/dist/dev.js
+index fa8cc77..466ec74 100644
+--- a/node_modules/solid-js/web/dist/dev.js
++++ b/node_modules/solid-js/web/dist/dev.js
+@@ -1,12 +1,52 @@
+ import { createMemo, createRoot, createRenderEffect, sharedConfig, untrack, enableHydration, createSignal, onCleanup, splitProps, $DEVCOMP } from 'solid-js';
++import {parse} from "node-html-parser"
+ export { ErrorBoundary, For, Index, Match, Show, Suspense, SuspenseList, Switch, createComponent, createRenderEffect as effect, getOwner, mergeProps, untrack } from 'solid-js';
+ 
+-const booleans = ["allowfullscreen", "async", "autofocus", "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden", "indeterminate", "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless", "selected"];
+-const Properties = /*#__PURE__*/new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
+-const ChildProperties = /*#__PURE__*/new Set(["innerHTML", "textContent", "innerText", "children"]);
++const booleans = [
++  "allowfullscreen",
++  "async",
++  "autofocus",
++  "autoplay",
++  "checked",
++  "controls",
++  "default",
++  "disabled",
++  "formnovalidate",
++  "hidden",
++  "indeterminate",
++  "ismap",
++  "loop",
++  "multiple",
++  "muted",
++  "nomodule",
++  "novalidate",
++  "open",
++  "playsinline",
++  "readonly",
++  "required",
++  "reversed",
++  "seamless",
++  "selected",
++];
++const Properties = /*#__PURE__*/ new Set([
++  "className",
++  "value",
++  "readOnly",
++  "formNoValidate",
++  "isMap",
++  "noModule",
++  "playsInline",
++  ...booleans,
++]);
++const ChildProperties = /*#__PURE__*/ new Set([
++  "innerHTML",
++  "textContent",
++  "innerText",
++  "children",
++]);
+ const Aliases = {
+   className: "class",
+-  htmlFor: "for"
++  htmlFor: "for",
+ };
+ const PropAliases = {
+   class: "className",
+@@ -14,34 +54,410 @@ const PropAliases = {
+   ismap: "isMap",
+   nomodule: "noModule",
+   playsinline: "playsInline",
+-  readonly: "readOnly"
++  readonly: "readOnly",
+ };
+-const DelegatedEvents = /*#__PURE__*/new Set(["beforeinput", "click", "dblclick", "contextmenu", "focusin", "focusout", "input", "keydown", "keyup", "mousedown", "mousemove", "mouseout", "mouseover", "mouseup", "pointerdown", "pointermove", "pointerout", "pointerover", "pointerup", "touchend", "touchmove", "touchstart"]);
+-const SVGElements = /*#__PURE__*/new Set([
+-"altGlyph", "altGlyphDef", "altGlyphItem", "animate", "animateColor", "animateMotion", "animateTransform", "circle", "clipPath", "color-profile", "cursor", "defs", "desc", "ellipse", "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood", "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter", "font", "font-face", "font-face-format", "font-face-name", "font-face-src", "font-face-uri", "foreignObject", "g", "glyph", "glyphRef", "hkern", "image", "line", "linearGradient", "marker", "mask", "metadata", "missing-glyph", "mpath", "path", "pattern", "polygon", "polyline", "radialGradient", "rect",
+-"set", "stop",
+-"svg", "switch", "symbol", "text", "textPath",
+-"tref", "tspan", "use", "view", "vkern"]);
++const DelegatedEvents = /*#__PURE__*/ new Set([
++  "beforeinput",
++  "click",
++  "dblclick",
++  "contextmenu",
++  "focusin",
++  "focusout",
++  "input",
++  "keydown",
++  "keyup",
++  "mousedown",
++  "mousemove",
++  "mouseout",
++  "mouseover",
++  "mouseup",
++  "pointerdown",
++  "pointermove",
++  "pointerout",
++  "pointerover",
++  "pointerup",
++  "touchend",
++  "touchmove",
++  "touchstart",
++]);
++const SVGElements = /*#__PURE__*/ new Set([
++  "altGlyph",
++  "altGlyphDef",
++  "altGlyphItem",
++  "animate",
++  "animateColor",
++  "animateMotion",
++  "animateTransform",
++  "circle",
++  "clipPath",
++  "color-profile",
++  "cursor",
++  "defs",
++  "desc",
++  "ellipse",
++  "feBlend",
++  "feColorMatrix",
++  "feComponentTransfer",
++  "feComposite",
++  "feConvolveMatrix",
++  "feDiffuseLighting",
++  "feDisplacementMap",
++  "feDistantLight",
++  "feFlood",
++  "feFuncA",
++  "feFuncB",
++  "feFuncG",
++  "feFuncR",
++  "feGaussianBlur",
++  "feImage",
++  "feMerge",
++  "feMergeNode",
++  "feMorphology",
++  "feOffset",
++  "fePointLight",
++  "feSpecularLighting",
++  "feSpotLight",
++  "feTile",
++  "feTurbulence",
++  "filter",
++  "font",
++  "font-face",
++  "font-face-format",
++  "font-face-name",
++  "font-face-src",
++  "font-face-uri",
++  "foreignObject",
++  "g",
++  "glyph",
++  "glyphRef",
++  "hkern",
++  "image",
++  "line",
++  "linearGradient",
++  "marker",
++  "mask",
++  "metadata",
++  "missing-glyph",
++  "mpath",
++  "path",
++  "pattern",
++  "polygon",
++  "polyline",
++  "radialGradient",
++  "rect",
++  "set",
++  "stop",
++  "svg",
++  "switch",
++  "symbol",
++  "text",
++  "textPath",
++  "tref",
++  "tspan",
++  "use",
++  "view",
++  "vkern",
++]);
+ const SVGNamespace = {
+   xlink: "http://www.w3.org/1999/xlink",
+-  xml: "http://www.w3.org/XML/1998/namespace"
++  xml: "http://www.w3.org/XML/1998/namespace",
+ };
+-const DOMElements = /*#__PURE__*/new Set(["html", "base", "head", "link", "meta", "style", "title", "body", "address", "article", "aside", "footer", "header", "main", "nav", "section", "body", "blockquote", "dd", "div", "dl", "dt", "figcaption", "figure", "hr", "li", "ol", "p", "pre", "ul", "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn", "em", "i", "kbd", "mark", "q", "rp", "rt", "ruby", "s", "samp", "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "area", "audio", "img", "map", "track", "video", "embed", "iframe", "object", "param", "picture", "portal", "source", "svg", "math", "canvas", "noscript", "script", "del", "ins", "caption", "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "button", "datalist", "fieldset", "form", "input", "label", "legend", "meter", "optgroup", "option", "output", "progress", "select", "textarea", "details", "dialog", "menu", "summary", "details", "slot", "template", "acronym", "applet", "basefont", "bgsound", "big", "blink", "center", "content", "dir", "font", "frame", "frameset", "hgroup", "image", "keygen", "marquee", "menuitem", "nobr", "noembed", "noframes", "plaintext", "rb", "rtc", "shadow", "spacer", "strike", "tt", "xmp", "a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "bgsound", "big", "blink", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "content", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "hgroup", "hr", "html", "i", "iframe", "image", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "main", "map", "mark", "marquee", "menu", "menuitem", "meta", "meter", "nav", "nobr", "noembed", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", "plaintext", "portal", "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section", "select", "shadow", "slot", "small", "source", "spacer", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr", "xmp", "input"]);
++const DOMElements = /*#__PURE__*/ new Set([
++  "html",
++  "base",
++  "head",
++  "link",
++  "meta",
++  "style",
++  "title",
++  "body",
++  "address",
++  "article",
++  "aside",
++  "footer",
++  "header",
++  "main",
++  "nav",
++  "section",
++  "body",
++  "blockquote",
++  "dd",
++  "div",
++  "dl",
++  "dt",
++  "figcaption",
++  "figure",
++  "hr",
++  "li",
++  "ol",
++  "p",
++  "pre",
++  "ul",
++  "a",
++  "abbr",
++  "b",
++  "bdi",
++  "bdo",
++  "br",
++  "cite",
++  "code",
++  "data",
++  "dfn",
++  "em",
++  "i",
++  "kbd",
++  "mark",
++  "q",
++  "rp",
++  "rt",
++  "ruby",
++  "s",
++  "samp",
++  "small",
++  "span",
++  "strong",
++  "sub",
++  "sup",
++  "time",
++  "u",
++  "var",
++  "wbr",
++  "area",
++  "audio",
++  "img",
++  "map",
++  "track",
++  "video",
++  "embed",
++  "iframe",
++  "object",
++  "param",
++  "picture",
++  "portal",
++  "source",
++  "svg",
++  "math",
++  "canvas",
++  "noscript",
++  "script",
++  "del",
++  "ins",
++  "caption",
++  "col",
++  "colgroup",
++  "table",
++  "tbody",
++  "td",
++  "tfoot",
++  "th",
++  "thead",
++  "tr",
++  "button",
++  "datalist",
++  "fieldset",
++  "form",
++  "input",
++  "label",
++  "legend",
++  "meter",
++  "optgroup",
++  "option",
++  "output",
++  "progress",
++  "select",
++  "textarea",
++  "details",
++  "dialog",
++  "menu",
++  "summary",
++  "details",
++  "slot",
++  "template",
++  "acronym",
++  "applet",
++  "basefont",
++  "bgsound",
++  "big",
++  "blink",
++  "center",
++  "content",
++  "dir",
++  "font",
++  "frame",
++  "frameset",
++  "hgroup",
++  "image",
++  "keygen",
++  "marquee",
++  "menuitem",
++  "nobr",
++  "noembed",
++  "noframes",
++  "plaintext",
++  "rb",
++  "rtc",
++  "shadow",
++  "spacer",
++  "strike",
++  "tt",
++  "xmp",
++  "a",
++  "abbr",
++  "acronym",
++  "address",
++  "applet",
++  "area",
++  "article",
++  "aside",
++  "audio",
++  "b",
++  "base",
++  "basefont",
++  "bdi",
++  "bdo",
++  "bgsound",
++  "big",
++  "blink",
++  "blockquote",
++  "body",
++  "br",
++  "button",
++  "canvas",
++  "caption",
++  "center",
++  "cite",
++  "code",
++  "col",
++  "colgroup",
++  "content",
++  "data",
++  "datalist",
++  "dd",
++  "del",
++  "details",
++  "dfn",
++  "dialog",
++  "dir",
++  "div",
++  "dl",
++  "dt",
++  "em",
++  "embed",
++  "fieldset",
++  "figcaption",
++  "figure",
++  "font",
++  "footer",
++  "form",
++  "frame",
++  "frameset",
++  "head",
++  "header",
++  "hgroup",
++  "hr",
++  "html",
++  "i",
++  "iframe",
++  "image",
++  "img",
++  "input",
++  "ins",
++  "kbd",
++  "keygen",
++  "label",
++  "legend",
++  "li",
++  "link",
++  "main",
++  "map",
++  "mark",
++  "marquee",
++  "menu",
++  "menuitem",
++  "meta",
++  "meter",
++  "nav",
++  "nobr",
++  "noembed",
++  "noframes",
++  "noscript",
++  "object",
++  "ol",
++  "optgroup",
++  "option",
++  "output",
++  "p",
++  "param",
++  "picture",
++  "plaintext",
++  "portal",
++  "pre",
++  "progress",
++  "q",
++  "rb",
++  "rp",
++  "rt",
++  "rtc",
++  "ruby",
++  "s",
++  "samp",
++  "script",
++  "section",
++  "select",
++  "shadow",
++  "slot",
++  "small",
++  "source",
++  "spacer",
++  "span",
++  "strike",
++  "strong",
++  "style",
++  "sub",
++  "summary",
++  "sup",
++  "table",
++  "tbody",
++  "td",
++  "template",
++  "textarea",
++  "tfoot",
++  "th",
++  "thead",
++  "time",
++  "title",
++  "tr",
++  "track",
++  "tt",
++  "u",
++  "ul",
++  "var",
++  "video",
++  "wbr",
++  "xmp",
++  "input",
++]);
+ 
+ function memo(fn, equals) {
+-  return createMemo(fn, undefined, !equals ? {
+-    equals
+-  } : undefined);
++  return createMemo(
++    fn,
++    undefined,
++    !equals
++      ? {
++          equals,
++        }
++      : undefined
++  );
+ }
+ 
+ function reconcileArrays(parentNode, a, b) {
+   let bLength = b.length,
+-      aEnd = a.length,
+-      bEnd = bLength,
+-      aStart = 0,
+-      bStart = 0,
+-      after = a[aEnd - 1].nextSibling,
+-      map = null;
++    aEnd = a.length,
++    bEnd = bLength,
++    aStart = 0,
++    bStart = 0,
++    after = a[aEnd - 1].nextSibling,
++    map = null;
+   while (aStart < aEnd || bStart < bEnd) {
+     if (a[aStart] === b[bStart]) {
+       aStart++;
+@@ -53,7 +469,12 @@ function reconcileArrays(parentNode, a, b) {
+       bEnd--;
+     }
+     if (aEnd === aStart) {
+-      const node = bEnd < bLength ? bStart ? b[bStart - 1].nextSibling : b[bEnd - bStart] : after;
++      const node =
++        bEnd < bLength
++          ? bStart
++            ? b[bStart - 1].nextSibling
++            : b[bEnd - bStart]
++          : after;
+       while (bStart < bEnd) parentNode.insertBefore(b[bStart++], node);
+     } else if (bEnd === bStart) {
+       while (aStart < aEnd) {
+@@ -75,8 +496,8 @@ function reconcileArrays(parentNode, a, b) {
+       if (index != null) {
+         if (bStart < index && index < bEnd) {
+           let i = aStart,
+-              sequence = 1,
+-              t;
++            sequence = 1,
++            t;
+           while (++i < aEnd && i < bEnd) {
+             if ((t = map.get(a[i])) == null || t !== index + sequence) break;
+             sequence++;
+@@ -94,23 +515,37 @@ function reconcileArrays(parentNode, a, b) {
+ const $$EVENTS = "_$DX_DELEGATE";
+ function render(code, element, init) {
+   let disposer;
+-  createRoot(dispose => {
++  createRoot((dispose) => {
+     disposer = dispose;
+-    element === document ? code() : insert(element, code(), element.firstChild ? null : undefined, init);
++    element === document
++      ? code()
++      : insert(element, code(), element.firstChild ? null : undefined, init);
+   });
+   return () => {
+     disposer();
+-    element.textContent = "";
++    element.removeChildren();
++    element.childNodes = [];
+   };
+ }
++
++function createElementFromAst(ast) {
++  const element = document.createElement(ast.tagName?.toLowerCase());
++  Object.assign(element,ast.attributes);
++  for (let i of ast.childNodes) {
++    element.appendChild(createElementFromAst(i));
++  }
++  return element;
++}
++
+ function template(html, check, isSVG) {
+-  const t = document.createElement("template");
+-  t.innerHTML = html;
+-  if (check && t.innerHTML.split("<").length - 1 !== check) throw `The browser resolved template HTML does not match JSX input:\n${t.innerHTML}\n\n${html}. Is your HTML properly formed?`;
+-  let node = t.content.firstChild;
+-  if (isSVG) node = node.firstChild;
+-  return node;
++  if (check && html.split("<").length - 1 !== check)
++    throw `The browser resolved template HTML does not match JSX input:\n${html}\n\n${html}. Is your HTML properly formed?`;
++  const ast = parse(html).childNodes[0];
++  return {
++    cloneNode: () => createElementFromAst(ast),
++  };
+ }
++
+ function delegateEvents(eventNames, document = window.document) {
+   const e = document[$$EVENTS] || (document[$$EVENTS] = new Set());
+   for (let i = 0, l = eventNames.length; i < l; i++) {
+@@ -123,18 +558,22 @@ function delegateEvents(eventNames, document = window.document) {
+ }
+ function clearDelegatedEvents(document = window.document) {
+   if (document[$$EVENTS]) {
+-    for (let name of document[$$EVENTS].keys()) document.removeEventListener(name, eventHandler);
++    for (let name of document[$$EVENTS].keys())
++      document.removeEventListener(name, eventHandler);
+     delete document[$$EVENTS];
+   }
+ }
+ function setAttribute(node, name, value) {
+-  if (value == null) node.removeAttribute(name);else node.setAttribute(name, value);
++  if (value == null) node.removeAttribute(name);
++  else node.setAttribute(name, value);
+ }
+ function setAttributeNS(node, namespace, name, value) {
+-  if (value == null) node.removeAttributeNS(namespace, name);else node.setAttributeNS(namespace, name, value);
++  if (value == null) node.removeAttributeNS(namespace, name);
++  else node.setAttributeNS(namespace, name, value);
+ }
+ function className(node, value) {
+-  if (value == null) node.removeAttribute("class");else node.className = value;
++  if (value == null) node.removeAttribute("class");
++  else node.className = value;
+ }
+ function addEventListener(node, name, handler, delegate) {
+   if (delegate) {
+@@ -144,12 +583,15 @@ function addEventListener(node, name, handler, delegate) {
+     } else node[`$$${name}`] = handler;
+   } else if (Array.isArray(handler)) {
+     const handlerFn = handler[0];
+-    node.addEventListener(name, handler[0] = e => handlerFn.call(node, handler[1], e));
++    node.addEventListener(
++      name,
++      (handler[0] = (e) => handlerFn.call(node, handler[1], e))
++    );
+   } else node.addEventListener(name, handler);
+ }
+ function classList(node, value, prev = {}) {
+   const classKeys = Object.keys(value || {}),
+-        prevKeys = Object.keys(prev);
++    prevKeys = Object.keys(prev);
+   let i, len;
+   for (i = 0, len = prevKeys.length; i < len; i++) {
+     const key = prevKeys[i];
+@@ -159,8 +601,9 @@ function classList(node, value, prev = {}) {
+   }
+   for (i = 0, len = classKeys.length; i < len; i++) {
+     const key = classKeys[i],
+-          classValue = !!value[key];
+-    if (!key || key === "undefined" || prev[key] === classValue || !classValue) continue;
++      classValue = !!value[key];
++    if (!key || key === "undefined" || prev[key] === classValue || !classValue)
++      continue;
+     toggleClassKey(node, key, true);
+     prev[key] = classValue;
+   }
+@@ -169,8 +612,9 @@ function classList(node, value, prev = {}) {
+ function style(node, value, prev = {}) {
+   const nodeStyle = node.style;
+   const prevString = typeof prev === "string";
+-  if (value == null && prevString || typeof value === "string") return nodeStyle.cssText = value;
+-  prevString && (nodeStyle.cssText = undefined, prev = {});
++  if ((value == null && prevString) || typeof value === "string")
++    return (nodeStyle.cssText = value);
++  prevString && ((nodeStyle.cssText = undefined), (prev = {}));
+   value || (value = {});
+   let v, s;
+   for (s in prev) {
+@@ -188,7 +632,9 @@ function style(node, value, prev = {}) {
+ }
+ function spread(node, accessor, isSVG, skipChildren) {
+   if (typeof accessor === "function") {
+-    createRenderEffect(current => spreadExpression(node, accessor(), current, isSVG, skipChildren));
++    createRenderEffect((current) =>
++      spreadExpression(node, accessor(), current, isSVG, skipChildren)
++    );
+   } else spreadExpression(node, accessor, undefined, isSVG, skipChildren);
+ }
+ function dynamicProperty(props, key) {
+@@ -197,7 +643,7 @@ function dynamicProperty(props, key) {
+     get() {
+       return src();
+     },
+-    enumerable: true
++    enumerable: true,
+   });
+   return props;
+ }
+@@ -209,10 +655,21 @@ function use(fn, element, arg) {
+ }
+ function insert(parent, accessor, marker, initial) {
+   if (marker !== undefined && !initial) initial = [];
+-  if (typeof accessor !== "function") return insertExpression(parent, accessor, initial, marker);
+-  createRenderEffect(current => insertExpression(parent, accessor(), current, marker), initial);
++  if (typeof accessor !== "function")
++    return insertExpression(parent, accessor, initial, marker);
++  createRenderEffect(
++    (current) => insertExpression(parent, accessor(), current, marker),
++    initial
++  );
+ }
+-function assign(node, props, isSVG, skipChildren, prevProps = {}, skipRef = false) {
++function assign(
++  node,
++  props,
++  isSVG,
++  skipChildren,
++  prevProps = {},
++  skipRef = false
++) {
+   props || (props = {});
+   for (const prop in prevProps) {
+     if (!(prop in props)) {
+@@ -226,18 +683,25 @@ function assign(node, props, isSVG, skipChildren, prevProps = {}, skipRef = fals
+       continue;
+     }
+     const value = props[prop];
+-    prevProps[prop] = assignProp(node, prop, value, prevProps[prop], isSVG, skipRef);
++    prevProps[prop] = assignProp(
++      node,
++      prop,
++      value,
++      prevProps[prop],
++      isSVG,
++      skipRef
++    );
+   }
+ }
+ function hydrate$1(code, element, options = {}) {
+   sharedConfig.completed = globalThis._$HY.completed;
+   sharedConfig.events = globalThis._$HY.events;
+   sharedConfig.load = globalThis._$HY.load;
+-  sharedConfig.gather = root => gatherHydratable(element, root);
++  sharedConfig.gather = (root) => gatherHydratable(element, root);
+   sharedConfig.registry = new Map();
+   sharedConfig.context = {
+     id: options.renderId || "",
+-    count: 0
++    count: 0,
+   };
+   gatherHydratable(element, options.renderId);
+   const dispose = render(code, element, [...element.childNodes]);
+@@ -246,9 +710,16 @@ function hydrate$1(code, element, options = {}) {
+ }
+ function getNextElement(template) {
+   let node, key;
+-  if (!sharedConfig.context || !(node = sharedConfig.registry.get(key = getHydrationKey()))) {
+-    if (sharedConfig.context) console.warn("Unable to find DOM nodes for hydration key:", key);
+-    if (!template) throw new Error("Unrecoverable Hydration Mismatch. No template for key: " + key);
++  if (
++    !sharedConfig.context ||
++    !(node = sharedConfig.registry.get((key = getHydrationKey())))
++  ) {
++    if (sharedConfig.context)
++      console.warn("Unable to find DOM nodes for hydration key:", key);
++    if (!template)
++      throw new Error(
++        "Unrecoverable Hydration Mismatch. No template for key: " + key
++      );
+     return template.cloneNode(true);
+   }
+   if (sharedConfig.completed) sharedConfig.completed.add(node);
+@@ -261,13 +732,14 @@ function getNextMatch(el, nodeName) {
+ }
+ function getNextMarker(start) {
+   let end = start,
+-      count = 0,
+-      current = [];
++    count = 0,
++    current = [];
+   if (sharedConfig.context) {
+     while (end) {
+       if (end.nodeType === 8) {
+         const v = end.nodeValue;
+-        if (v === "#") count++;else if (v === "/") {
++        if (v === "#") count++;
++        else if (v === "/") {
+           if (count === 0) return [end, current];
+           count--;
+         }
+@@ -281,10 +753,7 @@ function getNextMarker(start) {
+ function runHydrationEvents() {
+   if (sharedConfig.events && !sharedConfig.events.queued) {
+     queueMicrotask(() => {
+-      const {
+-        completed,
+-        events
+-      } = sharedConfig;
++      const { completed, events } = sharedConfig;
+       events.queued = false;
+       while (events.length) {
+         const [el, e] = events[0];
+@@ -301,7 +770,8 @@ function toPropertyName(name) {
+ }
+ function toggleClassKey(node, key, value) {
+   const classNames = key.trim().split(/\s+/);
+-  for (let i = 0, nameLen = classNames.length; i < nameLen; i++) node.classList.toggle(classNames[i], value);
++  for (let i = 0, nameLen = classNames.length; i < nameLen; i++)
++    node.classList.toggle(classNames[i], value);
+ }
+ function assignProp(node, prop, value, prev, isSVG, skipRef) {
+   let isCE, isProp, isChildProp;
+@@ -331,32 +801,41 @@ function assignProp(node, prop, value, prev, isSVG, skipRef) {
+       addEventListener(node, name, value, delegate);
+       delegate && delegateEvents([name]);
+     }
+-  } else if ((isChildProp = ChildProperties.has(prop)) || !isSVG && (PropAliases[prop] || (isProp = Properties.has(prop))) || (isCE = node.nodeName.includes("-"))) {
+-    if (prop === "class" || prop === "className") className(node, value);else if (isCE && !isProp && !isChildProp) node[toPropertyName(prop)] = value;else node[PropAliases[prop] || prop] = value;
++  } else if (
++    (isChildProp = ChildProperties.has(prop)) ||
++    (!isSVG && (PropAliases[prop] || (isProp = Properties.has(prop)))) ||
++    (isCE = node.nodeName.includes("-"))
++  ) {
++    if (prop === "class" || prop === "className") className(node, value);
++    else if (isCE && !isProp && !isChildProp)
++      node[toPropertyName(prop)] = value;
++    else node[PropAliases[prop] || prop] = value;
+   } else {
+-    const ns = isSVG && prop.indexOf(":") > -1 && SVGNamespace[prop.split(":")[0]];
+-    if (ns) setAttributeNS(node, ns, prop, value);else setAttribute(node, Aliases[prop] || prop, value);
++    const ns =
++      isSVG && prop.indexOf(":") > -1 && SVGNamespace[prop.split(":")[0]];
++    if (ns) setAttributeNS(node, ns, prop, value);
++    else setAttribute(node, Aliases[prop] || prop, value);
+   }
+   return value;
+ }
+ function eventHandler(e) {
+   const key = `$$${e.type}`;
+-  let node = e.composedPath && e.composedPath()[0] || e.target;
++  let node = (e.composedPath && e.composedPath()[0]) || e.target;
+   if (e.target !== node) {
+     Object.defineProperty(e, "target", {
+       configurable: true,
+-      value: node
++      value: node,
+     });
+   }
+   Object.defineProperty(e, "currentTarget", {
+     configurable: true,
+     get() {
+       return node || document;
+-    }
++    },
+   });
+   if (sharedConfig.registry && !sharedConfig.done) {
+     sharedConfig.done = true;
+-    document.querySelectorAll("[id^=pl-]").forEach(elem => elem.remove());
++    document.querySelectorAll("[id^=pl-]").forEach((elem) => elem.remove());
+   }
+   while (node !== null) {
+     const handler = node[key];
+@@ -365,13 +844,23 @@ function eventHandler(e) {
+       data !== undefined ? handler.call(node, data, e) : handler.call(node, e);
+       if (e.cancelBubble) return;
+     }
+-    node = node.host && node.host !== node && node.host instanceof Node ? node.host : node.parentNode;
++    node =
++      node.host && node.host !== node && node.host.childNodes
++        ? node.host
++        : node.parentNode;
+   }
+ }
+ function spreadExpression(node, props, prevProps = {}, isSVG, skipChildren) {
+   props || (props = {});
+   if (!skipChildren && "children" in props) {
+-    createRenderEffect(() => prevProps.children = insertExpression(node, props.children, prevProps.children));
++    createRenderEffect(
++      () =>
++        (prevProps.children = insertExpression(
++          node,
++          props.children,
++          prevProps.children
++        ))
++    );
+   }
+   props.ref && props.ref(node);
+   createRenderEffect(() => assign(node, props, isSVG, true, prevProps, true));
+@@ -382,8 +871,8 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+   while (typeof current === "function") current = current();
+   if (value === current) return current;
+   const t = typeof value,
+-        multi = marker !== undefined;
+-  parent = multi && current[0] && current[0].parentNode || parent;
++    multi = marker !== undefined;
++  parent = (multi && current[0] && current[0].parentNode) || parent;
+   if (t === "string" || t === "number") {
+     if (sharedConfig.context) return current;
+     if (t === "number") value = value.toString();
+@@ -396,7 +885,10 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+     } else {
+       if (current !== "" && typeof current === "string") {
+         current = parent.firstChild.data = value;
+-      } else current = parent.textContent = value;
++      } else {
++        console.log('setting node',parent,'to value',value);
++        current = parent.textContent = value;
++      }
+     }
+   } else if (value == null || t === "boolean") {
+     if (sharedConfig.context) return current;
+@@ -412,13 +904,15 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+     const array = [];
+     const currentArray = current && Array.isArray(current);
+     if (normalizeIncomingArray(array, value, current, unwrapArray)) {
+-      createRenderEffect(() => current = insertExpression(parent, array, current, marker, true));
++      createRenderEffect(
++        () => (current = insertExpression(parent, array, current, marker, true))
++      );
+       return () => current;
+     }
+     if (sharedConfig.context) {
+       if (!array.length) return current;
+       for (let i = 0; i < array.length; i++) {
+-        if (array[i].parentNode) return current = array;
++        if (array[i].parentNode) return (current = array);
+       }
+     }
+     if (array.length === 0) {
+@@ -433,10 +927,12 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+       appendNodes(parent, array);
+     }
+     current = array;
+-  } else if (value instanceof Node) {
+-    if (sharedConfig.context && value.parentNode) return current = multi ? [value] : value;
++  } else if (value && value.childNodes) {
++    if (sharedConfig.context && value.parentNode)
++      return (current = multi ? [value] : value);
+     if (Array.isArray(current)) {
+-      if (multi) return current = cleanChildren(parent, current, marker, value);
++      if (multi)
++        return (current = cleanChildren(parent, current, marker, value));
+       cleanChildren(parent, current, null, value);
+     } else if (current == null || current === "" || !parent.firstChild) {
+       parent.appendChild(value);
+@@ -449,15 +945,21 @@ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   let dynamic = false;
+   for (let i = 0, len = array.length; i < len; i++) {
+     let item = array[i],
+-        prev = current && current[i];
+-    if (item instanceof Node) {
++      prev = current && current[i];
++    if (item && item.childNodes) {
+       normalized.push(item);
+-    } else if (item == null || item === true || item === false) ; else if (Array.isArray(item)) {
++    } else if (item == null || item === true || item === false);
++    else if (Array.isArray(item)) {
+       dynamic = normalizeIncomingArray(normalized, item, prev) || dynamic;
+-    } else if ((typeof item) === "function") {
++    } else if (typeof item === "function") {
+       if (unwrap) {
+         while (typeof item === "function") item = item();
+-        dynamic = normalizeIncomingArray(normalized, Array.isArray(item) ? item : [item], Array.isArray(prev) ? prev : [prev]) || dynamic;
++        dynamic =
++          normalizeIncomingArray(
++            normalized,
++            Array.isArray(item) ? item : [item],
++            Array.isArray(prev) ? prev : [prev]
++          ) || dynamic;
+       } else {
+         normalized.push(item);
+         dynamic = true;
+@@ -472,10 +974,12 @@ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   return dynamic;
+ }
+ function appendNodes(parent, array, marker) {
+-  for (let i = 0, len = array.length; i < len; i++) parent.insertBefore(array[i], marker);
++  for (let i = 0, len = array.length; i < len; i++)
++    parent.insertBefore(array[i], marker);
+ }
+ function cleanChildren(parent, current, marker, replacement) {
+-  if (marker === undefined) return parent.textContent = "";
++  console.log(cleanChildren,parent,current,marker,replacement)
++  if (marker === undefined) return (parent.textContent = "");
+   const node = replacement || document.createTextNode("");
+   if (current.length) {
+     let inserted = false;
+@@ -483,7 +987,11 @@ function cleanChildren(parent, current, marker, replacement) {
+       const el = current[i];
+       if (node !== el) {
+         const isParent = el.parentNode === parent;
+-        if (!inserted && !i) isParent ? parent.replaceChild(node, el) : parent.insertBefore(node, marker);else isParent && el.remove();
++        if (!inserted && !i)
++          isParent
++            ? parent.replaceChild(node, el)
++            : parent.insertBefore(node, marker);
++        else isParent && el.remove();
+       } else inserted = true;
+     }
+   } else parent.insertBefore(node, marker);
+@@ -494,7 +1002,8 @@ function gatherHydratable(element, root) {
+   for (let i = 0; i < templates.length; i++) {
+     const node = templates[i];
+     const key = node.getAttribute("data-hk");
+-    if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key)) sharedConfig.registry.set(key, node);
++    if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key))
++      sharedConfig.registry.set(key, node);
+   }
+ }
+ function getHydrationKey() {
+@@ -507,7 +1016,9 @@ function NoHydration(props) {
+ function voidFn() {}
+ 
+ function throwInBrowser(func) {
+-  const err = new Error(`${func.name} is not supported in the browser, returning undefined`);
++  const err = new Error(
++    `${func.name} is not supported in the browser, returning undefined`
++  );
+   console.error(err);
+ }
+ function renderToString(fn, options) {
+@@ -532,18 +1043,18 @@ function ssrSpread(props, isSVG, skipChildren) {}
+ const isServer = false;
+ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+ function createElement(tagName, isSVG = false) {
+-  return isSVG ? document.createElementNS(SVG_NAMESPACE, tagName) : document.createElement(tagName);
++  return isSVG
++    ? document.createElementNS(SVG_NAMESPACE, tagName)
++    : document.createElement(tagName);
+ }
+ const hydrate = (...args) => {
+   enableHydration();
+   return hydrate$1(...args);
+ };
+ function Portal(props) {
+-  const {
+-    useShadow
+-  } = props,
+-        marker = document.createTextNode(""),
+-        mount = props.mount || document.body;
++  const { useShadow } = props,
++    marker = document.createTextNode(""),
++    mount = props.mount || document.body;
+   function renderPortal() {
+     if (sharedConfig.context) {
+       const [s, set] = createSignal(false);
+@@ -554,19 +1065,25 @@ function Portal(props) {
+   if (mount instanceof HTMLHeadElement) {
+     const [clean, setClean] = createSignal(false);
+     const cleanup = () => setClean(true);
+-    createRoot(dispose => insert(mount, () => !clean() ? renderPortal()() : dispose(), null));
++    createRoot((dispose) =>
++      insert(mount, () => (!clean() ? renderPortal()() : dispose()), null)
++    );
+     onCleanup(() => {
+-      if (sharedConfig.context) queueMicrotask(cleanup);else cleanup();
++      if (sharedConfig.context) queueMicrotask(cleanup);
++      else cleanup();
+     });
+   } else {
+     const container = createElement(props.isSVG ? "g" : "div", props.isSVG),
+-          renderRoot = useShadow && container.attachShadow ? container.attachShadow({
+-      mode: "open"
+-    }) : container;
++      renderRoot =
++        useShadow && container.attachShadow
++          ? container.attachShadow({
++              mode: "open",
++            })
++          : container;
+     Object.defineProperty(container, "host", {
+       get() {
+         return marker.parentNode;
+-      }
++      },
+     });
+     insert(renderRoot, renderPortal());
+     mount.appendChild(container);
+@@ -583,16 +1100,71 @@ function Dynamic(props) {
+     switch (typeof component) {
+       case "function":
+         Object.assign(component, {
+-          [$DEVCOMP]: true
++          [$DEVCOMP]: true,
+         });
+         return untrack(() => component(others));
+       case "string":
+         const isSvg = SVGElements.has(component);
+-        const el = sharedConfig.context ? getNextElement() : createElement(component, isSvg);
++        const el = sharedConfig.context
++          ? getNextElement()
++          : createElement(component, isSvg);
+         spread(el, others, isSvg);
+         return el;
+     }
+   });
+ }
+ 
+-export { Aliases, voidFn as Assets, ChildProperties, DOMElements, DelegatedEvents, Dynamic, voidFn as HydrationScript, NoHydration, Portal, PropAliases, Properties, SVGElements, SVGNamespace, addEventListener, assign, classList, className, clearDelegatedEvents, delegateEvents, dynamicProperty, escape, voidFn as generateHydrationScript, voidFn as getAssets, getHydrationKey, getNextElement, getNextMarker, getNextMatch, hydrate, innerHTML, insert, isServer, memo, render, renderToStream, renderToString, renderToStringAsync, resolveSSRNode, runHydrationEvents, setAttribute, setAttributeNS, spread, ssr, ssrAttribute, ssrClassList, ssrElement, ssrHydrationKey, ssrSpread, ssrStyle, style, template, use, voidFn as useAssets };
++export {
++  Aliases,
++  voidFn as Assets,
++  ChildProperties,
++  DOMElements,
++  DelegatedEvents,
++  Dynamic,
++  voidFn as HydrationScript,
++  NoHydration,
++  Portal,
++  PropAliases,
++  Properties,
++  SVGElements,
++  SVGNamespace,
++  addEventListener,
++  assign,
++  classList,
++  className,
++  clearDelegatedEvents,
++  delegateEvents,
++  dynamicProperty,
++  escape,
++  voidFn as generateHydrationScript,
++  voidFn as getAssets,
++  getHydrationKey,
++  getNextElement,
++  getNextMarker,
++  getNextMatch,
++  hydrate,
++  innerHTML,
++  insert,
++  isServer,
++  memo,
++  render,
++  renderToStream,
++  renderToString,
++  renderToStringAsync,
++  resolveSSRNode,
++  runHydrationEvents,
++  setAttribute,
++  setAttributeNS,
++  spread,
++  ssr,
++  ssrAttribute,
++  ssrClassList,
++  ssrElement,
++  ssrHydrationKey,
++  ssrSpread,
++  ssrStyle,
++  style,
++  template,
++  use,
++  voidFn as useAssets,
++};
+diff --git a/node_modules/solid-js/web/dist/web.cjs b/node_modules/solid-js/web/dist/web.cjs
+index 45c639e..0d7b8cf 100644
+--- a/node_modules/solid-js/web/dist/web.cjs
++++ b/node_modules/solid-js/web/dist/web.cjs
+@@ -3,6 +3,7 @@
+ Object.defineProperty(exports, '__esModule', { value: true });
+ 
+ var solidJs = require('solid-js');
++var {parse} = require("node-html-parser");
+ 
+ const booleans = ["allowfullscreen", "async", "autofocus", "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden", "indeterminate", "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless", "selected"];
+ const Properties = /*#__PURE__*/new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
+@@ -106,12 +107,20 @@ function render(code, element, init) {
+     element.textContent = "";
+   };
+ }
++
++function createElementFromAst(ast) {
++  const element = document.createElement(ast.tagName?.toLowerCase());
++  for (let i=0;i < ast.childNodes.length; i++) {
++    element.appendChild(createElementFromAst(ast.childNodes[i]));
++  }
++  return element;
++}
++
+ function template(html, check, isSVG) {
+-  const t = document.createElement("template");
+-  t.innerHTML = html;
+-  let node = t.content.firstChild;
+-  if (isSVG) node = node.firstChild;
+-  return node;
++  const ast = parse(html).childNodes[0]
++  return {
++    cloneNode: () => createElementFromAst(ast),
++  };
+ }
+ function delegateEvents(eventNames, document = window.document) {
+   const e = document[$$EVENTS] || (document[$$EVENTS] = new Set());
+@@ -365,7 +374,7 @@ function eventHandler(e) {
+       data !== undefined ? handler.call(node, data, e) : handler.call(node, e);
+       if (e.cancelBubble) return;
+     }
+-    node = node.host && node.host !== node && node.host instanceof Node ? node.host : node.parentNode;
++    node = node.host && node.host !== node && node.host.childNodes ? node.host : node.parentNode;
+   }
+ }
+ function spreadExpression(node, props, prevProps = {}, isSVG, skipChildren) {
+@@ -433,7 +442,7 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+       appendNodes(parent, array);
+     }
+     current = array;
+-  } else if (value instanceof Node) {
++  } else if (value && value.childNodes) {
+     if (solidJs.sharedConfig.context && value.parentNode) return current = multi ? [value] : value;
+     if (Array.isArray(current)) {
+       if (multi) return current = cleanChildren(parent, current, marker, value);
+@@ -450,7 +459,7 @@ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   for (let i = 0, len = array.length; i < len; i++) {
+     let item = array[i],
+         prev = current && current[i];
+-    if (item instanceof Node) {
++    if (item && item.childNodes) {
+       normalized.push(item);
+     } else if (item == null || item === true || item === false) ; else if (Array.isArray(item)) {
+       dynamic = normalizeIncomingArray(normalized, item, prev) || dynamic;
+diff --git a/node_modules/solid-js/web/dist/web.js b/node_modules/solid-js/web/dist/web.js
+index 8147bbb..8d75a7a 100644
+--- a/node_modules/solid-js/web/dist/web.js
++++ b/node_modules/solid-js/web/dist/web.js
+@@ -1,12 +1,53 @@
+ import { createMemo, createRoot, createRenderEffect, sharedConfig, untrack, enableHydration, createSignal, onCleanup, splitProps } from 'solid-js';
++import {parse} from "node-html-parser"
+ export { ErrorBoundary, For, Index, Match, Show, Suspense, SuspenseList, Switch, createComponent, createRenderEffect as effect, getOwner, mergeProps, untrack } from 'solid-js';
+ 
+-const booleans = ["allowfullscreen", "async", "autofocus", "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden", "indeterminate", "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless", "selected"];
+-const Properties = /*#__PURE__*/new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
+-const ChildProperties = /*#__PURE__*/new Set(["innerHTML", "textContent", "innerText", "children"]);
++
++const booleans = [
++  "allowfullscreen",
++  "async",
++  "autofocus",
++  "autoplay",
++  "checked",
++  "controls",
++  "default",
++  "disabled",
++  "formnovalidate",
++  "hidden",
++  "indeterminate",
++  "ismap",
++  "loop",
++  "multiple",
++  "muted",
++  "nomodule",
++  "novalidate",
++  "open",
++  "playsinline",
++  "readonly",
++  "required",
++  "reversed",
++  "seamless",
++  "selected",
++];
++const Properties = /*#__PURE__*/ new Set([
++  "className",
++  "value",
++  "readOnly",
++  "formNoValidate",
++  "isMap",
++  "noModule",
++  "playsInline",
++  ...booleans,
++]);
++const ChildProperties = /*#__PURE__*/ new Set([
++  "innerHTML",
++  "textContent",
++  "innerText",
++  "children",
++]);
+ const Aliases = {
+   className: "class",
+-  htmlFor: "for"
++  htmlFor: "for",
+ };
+ const PropAliases = {
+   class: "className",
+@@ -14,34 +55,410 @@ const PropAliases = {
+   ismap: "isMap",
+   nomodule: "noModule",
+   playsinline: "playsInline",
+-  readonly: "readOnly"
++  readonly: "readOnly",
+ };
+-const DelegatedEvents = /*#__PURE__*/new Set(["beforeinput", "click", "dblclick", "contextmenu", "focusin", "focusout", "input", "keydown", "keyup", "mousedown", "mousemove", "mouseout", "mouseover", "mouseup", "pointerdown", "pointermove", "pointerout", "pointerover", "pointerup", "touchend", "touchmove", "touchstart"]);
+-const SVGElements = /*#__PURE__*/new Set([
+-"altGlyph", "altGlyphDef", "altGlyphItem", "animate", "animateColor", "animateMotion", "animateTransform", "circle", "clipPath", "color-profile", "cursor", "defs", "desc", "ellipse", "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood", "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "filter", "font", "font-face", "font-face-format", "font-face-name", "font-face-src", "font-face-uri", "foreignObject", "g", "glyph", "glyphRef", "hkern", "image", "line", "linearGradient", "marker", "mask", "metadata", "missing-glyph", "mpath", "path", "pattern", "polygon", "polyline", "radialGradient", "rect",
+-"set", "stop",
+-"svg", "switch", "symbol", "text", "textPath",
+-"tref", "tspan", "use", "view", "vkern"]);
++const DelegatedEvents = /*#__PURE__*/ new Set([
++  "beforeinput",
++  "click",
++  "dblclick",
++  "contextmenu",
++  "focusin",
++  "focusout",
++  "input",
++  "keydown",
++  "keyup",
++  "mousedown",
++  "mousemove",
++  "mouseout",
++  "mouseover",
++  "mouseup",
++  "pointerdown",
++  "pointermove",
++  "pointerout",
++  "pointerover",
++  "pointerup",
++  "touchend",
++  "touchmove",
++  "touchstart",
++]);
++const SVGElements = /*#__PURE__*/ new Set([
++  "altGlyph",
++  "altGlyphDef",
++  "altGlyphItem",
++  "animate",
++  "animateColor",
++  "animateMotion",
++  "animateTransform",
++  "circle",
++  "clipPath",
++  "color-profile",
++  "cursor",
++  "defs",
++  "desc",
++  "ellipse",
++  "feBlend",
++  "feColorMatrix",
++  "feComponentTransfer",
++  "feComposite",
++  "feConvolveMatrix",
++  "feDiffuseLighting",
++  "feDisplacementMap",
++  "feDistantLight",
++  "feFlood",
++  "feFuncA",
++  "feFuncB",
++  "feFuncG",
++  "feFuncR",
++  "feGaussianBlur",
++  "feImage",
++  "feMerge",
++  "feMergeNode",
++  "feMorphology",
++  "feOffset",
++  "fePointLight",
++  "feSpecularLighting",
++  "feSpotLight",
++  "feTile",
++  "feTurbulence",
++  "filter",
++  "font",
++  "font-face",
++  "font-face-format",
++  "font-face-name",
++  "font-face-src",
++  "font-face-uri",
++  "foreignObject",
++  "g",
++  "glyph",
++  "glyphRef",
++  "hkern",
++  "image",
++  "line",
++  "linearGradient",
++  "marker",
++  "mask",
++  "metadata",
++  "missing-glyph",
++  "mpath",
++  "path",
++  "pattern",
++  "polygon",
++  "polyline",
++  "radialGradient",
++  "rect",
++  "set",
++  "stop",
++  "svg",
++  "switch",
++  "symbol",
++  "text",
++  "textPath",
++  "tref",
++  "tspan",
++  "use",
++  "view",
++  "vkern",
++]);
+ const SVGNamespace = {
+   xlink: "http://www.w3.org/1999/xlink",
+-  xml: "http://www.w3.org/XML/1998/namespace"
++  xml: "http://www.w3.org/XML/1998/namespace",
+ };
+-const DOMElements = /*#__PURE__*/new Set(["html", "base", "head", "link", "meta", "style", "title", "body", "address", "article", "aside", "footer", "header", "main", "nav", "section", "body", "blockquote", "dd", "div", "dl", "dt", "figcaption", "figure", "hr", "li", "ol", "p", "pre", "ul", "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn", "em", "i", "kbd", "mark", "q", "rp", "rt", "ruby", "s", "samp", "small", "span", "strong", "sub", "sup", "time", "u", "var", "wbr", "area", "audio", "img", "map", "track", "video", "embed", "iframe", "object", "param", "picture", "portal", "source", "svg", "math", "canvas", "noscript", "script", "del", "ins", "caption", "col", "colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "button", "datalist", "fieldset", "form", "input", "label", "legend", "meter", "optgroup", "option", "output", "progress", "select", "textarea", "details", "dialog", "menu", "summary", "details", "slot", "template", "acronym", "applet", "basefont", "bgsound", "big", "blink", "center", "content", "dir", "font", "frame", "frameset", "hgroup", "image", "keygen", "marquee", "menuitem", "nobr", "noembed", "noframes", "plaintext", "rb", "rtc", "shadow", "spacer", "strike", "tt", "xmp", "a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "bgsound", "big", "blink", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "content", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "head", "header", "hgroup", "hr", "html", "i", "iframe", "image", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "main", "map", "mark", "marquee", "menu", "menuitem", "meta", "meter", "nav", "nobr", "noembed", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", "plaintext", "portal", "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section", "select", "shadow", "slot", "small", "source", "spacer", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr", "xmp", "input"]);
++const DOMElements = /*#__PURE__*/ new Set([
++  "html",
++  "base",
++  "head",
++  "link",
++  "meta",
++  "style",
++  "title",
++  "body",
++  "address",
++  "article",
++  "aside",
++  "footer",
++  "header",
++  "main",
++  "nav",
++  "section",
++  "body",
++  "blockquote",
++  "dd",
++  "div",
++  "dl",
++  "dt",
++  "figcaption",
++  "figure",
++  "hr",
++  "li",
++  "ol",
++  "p",
++  "pre",
++  "ul",
++  "a",
++  "abbr",
++  "b",
++  "bdi",
++  "bdo",
++  "br",
++  "cite",
++  "code",
++  "data",
++  "dfn",
++  "em",
++  "i",
++  "kbd",
++  "mark",
++  "q",
++  "rp",
++  "rt",
++  "ruby",
++  "s",
++  "samp",
++  "small",
++  "span",
++  "strong",
++  "sub",
++  "sup",
++  "time",
++  "u",
++  "var",
++  "wbr",
++  "area",
++  "audio",
++  "img",
++  "map",
++  "track",
++  "video",
++  "embed",
++  "iframe",
++  "object",
++  "param",
++  "picture",
++  "portal",
++  "source",
++  "svg",
++  "math",
++  "canvas",
++  "noscript",
++  "script",
++  "del",
++  "ins",
++  "caption",
++  "col",
++  "colgroup",
++  "table",
++  "tbody",
++  "td",
++  "tfoot",
++  "th",
++  "thead",
++  "tr",
++  "button",
++  "datalist",
++  "fieldset",
++  "form",
++  "input",
++  "label",
++  "legend",
++  "meter",
++  "optgroup",
++  "option",
++  "output",
++  "progress",
++  "select",
++  "textarea",
++  "details",
++  "dialog",
++  "menu",
++  "summary",
++  "details",
++  "slot",
++  "template",
++  "acronym",
++  "applet",
++  "basefont",
++  "bgsound",
++  "big",
++  "blink",
++  "center",
++  "content",
++  "dir",
++  "font",
++  "frame",
++  "frameset",
++  "hgroup",
++  "image",
++  "keygen",
++  "marquee",
++  "menuitem",
++  "nobr",
++  "noembed",
++  "noframes",
++  "plaintext",
++  "rb",
++  "rtc",
++  "shadow",
++  "spacer",
++  "strike",
++  "tt",
++  "xmp",
++  "a",
++  "abbr",
++  "acronym",
++  "address",
++  "applet",
++  "area",
++  "article",
++  "aside",
++  "audio",
++  "b",
++  "base",
++  "basefont",
++  "bdi",
++  "bdo",
++  "bgsound",
++  "big",
++  "blink",
++  "blockquote",
++  "body",
++  "br",
++  "button",
++  "canvas",
++  "caption",
++  "center",
++  "cite",
++  "code",
++  "col",
++  "colgroup",
++  "content",
++  "data",
++  "datalist",
++  "dd",
++  "del",
++  "details",
++  "dfn",
++  "dialog",
++  "dir",
++  "div",
++  "dl",
++  "dt",
++  "em",
++  "embed",
++  "fieldset",
++  "figcaption",
++  "figure",
++  "font",
++  "footer",
++  "form",
++  "frame",
++  "frameset",
++  "head",
++  "header",
++  "hgroup",
++  "hr",
++  "html",
++  "i",
++  "iframe",
++  "image",
++  "img",
++  "input",
++  "ins",
++  "kbd",
++  "keygen",
++  "label",
++  "legend",
++  "li",
++  "link",
++  "main",
++  "map",
++  "mark",
++  "marquee",
++  "menu",
++  "menuitem",
++  "meta",
++  "meter",
++  "nav",
++  "nobr",
++  "noembed",
++  "noframes",
++  "noscript",
++  "object",
++  "ol",
++  "optgroup",
++  "option",
++  "output",
++  "p",
++  "param",
++  "picture",
++  "plaintext",
++  "portal",
++  "pre",
++  "progress",
++  "q",
++  "rb",
++  "rp",
++  "rt",
++  "rtc",
++  "ruby",
++  "s",
++  "samp",
++  "script",
++  "section",
++  "select",
++  "shadow",
++  "slot",
++  "small",
++  "source",
++  "spacer",
++  "span",
++  "strike",
++  "strong",
++  "style",
++  "sub",
++  "summary",
++  "sup",
++  "table",
++  "tbody",
++  "td",
++  "template",
++  "textarea",
++  "tfoot",
++  "th",
++  "thead",
++  "time",
++  "title",
++  "tr",
++  "track",
++  "tt",
++  "u",
++  "ul",
++  "var",
++  "video",
++  "wbr",
++  "xmp",
++  "input",
++]);
+ 
+ function memo(fn, equals) {
+-  return createMemo(fn, undefined, !equals ? {
+-    equals
+-  } : undefined);
++  return createMemo(
++    fn,
++    undefined,
++    !equals
++      ? {
++          equals,
++        }
++      : undefined
++  );
+ }
+ 
+ function reconcileArrays(parentNode, a, b) {
+   let bLength = b.length,
+-      aEnd = a.length,
+-      bEnd = bLength,
+-      aStart = 0,
+-      bStart = 0,
+-      after = a[aEnd - 1].nextSibling,
+-      map = null;
++    aEnd = a.length,
++    bEnd = bLength,
++    aStart = 0,
++    bStart = 0,
++    after = a[aEnd - 1].nextSibling,
++    map = null;
+   while (aStart < aEnd || bStart < bEnd) {
+     if (a[aStart] === b[bStart]) {
+       aStart++;
+@@ -53,7 +470,12 @@ function reconcileArrays(parentNode, a, b) {
+       bEnd--;
+     }
+     if (aEnd === aStart) {
+-      const node = bEnd < bLength ? bStart ? b[bStart - 1].nextSibling : b[bEnd - bStart] : after;
++      const node =
++        bEnd < bLength
++          ? bStart
++            ? b[bStart - 1].nextSibling
++            : b[bEnd - bStart]
++          : after;
+       while (bStart < bEnd) parentNode.insertBefore(b[bStart++], node);
+     } else if (bEnd === bStart) {
+       while (aStart < aEnd) {
+@@ -75,8 +497,8 @@ function reconcileArrays(parentNode, a, b) {
+       if (index != null) {
+         if (bStart < index && index < bEnd) {
+           let i = aStart,
+-              sequence = 1,
+-              t;
++            sequence = 1,
++            t;
+           while (++i < aEnd && i < bEnd) {
+             if ((t = map.get(a[i])) == null || t !== index + sequence) break;
+             sequence++;
+@@ -94,22 +516,35 @@ function reconcileArrays(parentNode, a, b) {
+ const $$EVENTS = "_$DX_DELEGATE";
+ function render(code, element, init) {
+   let disposer;
+-  createRoot(dispose => {
++  createRoot((dispose) => {
+     disposer = dispose;
+-    element === document ? code() : insert(element, code(), element.firstChild ? null : undefined, init);
++    element === document
++      ? code()
++      : insert(element, code(), element.firstChild ? null : undefined, init);
+   });
+   return () => {
+     disposer();
+-    element.textContent = "";
++    element.removeChildren();
++    element.childNodes = [];
+   };
+ }
++
++function createElementFromAst(ast) {
++  const element = document.createElement(ast.tagName?.toLowerCase());
++  Object.assign(element,ast.attributes);
++  for (let i of ast.childNodes) {
++    element.appendChild(createElementFromAst(i));
++  }
++  return element;
++}
++
+ function template(html, check, isSVG) {
+-  const t = document.createElement("template");
+-  t.innerHTML = html;
+-  let node = t.content.firstChild;
+-  if (isSVG) node = node.firstChild;
+-  return node;
++  const ast = parse(html).childNodes[0]
++  return {
++    cloneNode: () => createElementFromAst(ast),
++  };
+ }
++
+ function delegateEvents(eventNames, document = window.document) {
+   const e = document[$$EVENTS] || (document[$$EVENTS] = new Set());
+   for (let i = 0, l = eventNames.length; i < l; i++) {
+@@ -122,18 +557,22 @@ function delegateEvents(eventNames, document = window.document) {
+ }
+ function clearDelegatedEvents(document = window.document) {
+   if (document[$$EVENTS]) {
+-    for (let name of document[$$EVENTS].keys()) document.removeEventListener(name, eventHandler);
++    for (let name of document[$$EVENTS].keys())
++      document.removeEventListener(name, eventHandler);
+     delete document[$$EVENTS];
+   }
+ }
+ function setAttribute(node, name, value) {
+-  if (value == null) node.removeAttribute(name);else node.setAttribute(name, value);
++  if (value == null) node.removeAttribute(name);
++  else node.setAttribute(name, value);
+ }
+ function setAttributeNS(node, namespace, name, value) {
+-  if (value == null) node.removeAttributeNS(namespace, name);else node.setAttributeNS(namespace, name, value);
++  if (value == null) node.removeAttributeNS(namespace, name);
++  else node.setAttributeNS(namespace, name, value);
+ }
+ function className(node, value) {
+-  if (value == null) node.removeAttribute("class");else node.className = value;
++  if (value == null) node.removeAttribute("class");
++  else node.className = value;
+ }
+ function addEventListener(node, name, handler, delegate) {
+   if (delegate) {
+@@ -143,12 +582,15 @@ function addEventListener(node, name, handler, delegate) {
+     } else node[`$$${name}`] = handler;
+   } else if (Array.isArray(handler)) {
+     const handlerFn = handler[0];
+-    node.addEventListener(name, handler[0] = e => handlerFn.call(node, handler[1], e));
++    node.addEventListener(
++      name,
++      (handler[0] = (e) => handlerFn.call(node, handler[1], e))
++    );
+   } else node.addEventListener(name, handler);
+ }
+ function classList(node, value, prev = {}) {
+   const classKeys = Object.keys(value || {}),
+-        prevKeys = Object.keys(prev);
++    prevKeys = Object.keys(prev);
+   let i, len;
+   for (i = 0, len = prevKeys.length; i < len; i++) {
+     const key = prevKeys[i];
+@@ -158,8 +600,9 @@ function classList(node, value, prev = {}) {
+   }
+   for (i = 0, len = classKeys.length; i < len; i++) {
+     const key = classKeys[i],
+-          classValue = !!value[key];
+-    if (!key || key === "undefined" || prev[key] === classValue || !classValue) continue;
++      classValue = !!value[key];
++    if (!key || key === "undefined" || prev[key] === classValue || !classValue)
++      continue;
+     toggleClassKey(node, key, true);
+     prev[key] = classValue;
+   }
+@@ -168,8 +611,9 @@ function classList(node, value, prev = {}) {
+ function style(node, value, prev = {}) {
+   const nodeStyle = node.style;
+   const prevString = typeof prev === "string";
+-  if (value == null && prevString || typeof value === "string") return nodeStyle.cssText = value;
+-  prevString && (nodeStyle.cssText = undefined, prev = {});
++  if ((value == null && prevString) || typeof value === "string")
++    return (nodeStyle.cssText = value);
++  prevString && ((nodeStyle.cssText = undefined), (prev = {}));
+   value || (value = {});
+   let v, s;
+   for (s in prev) {
+@@ -187,7 +631,9 @@ function style(node, value, prev = {}) {
+ }
+ function spread(node, accessor, isSVG, skipChildren) {
+   if (typeof accessor === "function") {
+-    createRenderEffect(current => spreadExpression(node, accessor(), current, isSVG, skipChildren));
++    createRenderEffect((current) =>
++      spreadExpression(node, accessor(), current, isSVG, skipChildren)
++    );
+   } else spreadExpression(node, accessor, undefined, isSVG, skipChildren);
+ }
+ function dynamicProperty(props, key) {
+@@ -196,7 +642,7 @@ function dynamicProperty(props, key) {
+     get() {
+       return src();
+     },
+-    enumerable: true
++    enumerable: true,
+   });
+   return props;
+ }
+@@ -208,10 +654,21 @@ function use(fn, element, arg) {
+ }
+ function insert(parent, accessor, marker, initial) {
+   if (marker !== undefined && !initial) initial = [];
+-  if (typeof accessor !== "function") return insertExpression(parent, accessor, initial, marker);
+-  createRenderEffect(current => insertExpression(parent, accessor(), current, marker), initial);
++  if (typeof accessor !== "function")
++    return insertExpression(parent, accessor, initial, marker);
++  createRenderEffect(
++    (current) => insertExpression(parent, accessor(), current, marker),
++    initial
++  );
+ }
+-function assign(node, props, isSVG, skipChildren, prevProps = {}, skipRef = false) {
++function assign(
++  node,
++  props,
++  isSVG,
++  skipChildren,
++  prevProps = {},
++  skipRef = false
++) {
+   props || (props = {});
+   for (const prop in prevProps) {
+     if (!(prop in props)) {
+@@ -225,18 +682,25 @@ function assign(node, props, isSVG, skipChildren, prevProps = {}, skipRef = fals
+       continue;
+     }
+     const value = props[prop];
+-    prevProps[prop] = assignProp(node, prop, value, prevProps[prop], isSVG, skipRef);
++    prevProps[prop] = assignProp(
++      node,
++      prop,
++      value,
++      prevProps[prop],
++      isSVG,
++      skipRef
++    );
+   }
+ }
+ function hydrate$1(code, element, options = {}) {
+   sharedConfig.completed = globalThis._$HY.completed;
+   sharedConfig.events = globalThis._$HY.events;
+   sharedConfig.load = globalThis._$HY.load;
+-  sharedConfig.gather = root => gatherHydratable(element, root);
++  sharedConfig.gather = (root) => gatherHydratable(element, root);
+   sharedConfig.registry = new Map();
+   sharedConfig.context = {
+     id: options.renderId || "",
+-    count: 0
++    count: 0,
+   };
+   gatherHydratable(element, options.renderId);
+   const dispose = render(code, element, [...element.childNodes]);
+@@ -245,7 +709,10 @@ function hydrate$1(code, element, options = {}) {
+ }
+ function getNextElement(template) {
+   let node, key;
+-  if (!sharedConfig.context || !(node = sharedConfig.registry.get(key = getHydrationKey()))) {
++  if (
++    !sharedConfig.context ||
++    !(node = sharedConfig.registry.get((key = getHydrationKey())))
++  ) {
+     return template.cloneNode(true);
+   }
+   if (sharedConfig.completed) sharedConfig.completed.add(node);
+@@ -258,13 +725,14 @@ function getNextMatch(el, nodeName) {
+ }
+ function getNextMarker(start) {
+   let end = start,
+-      count = 0,
+-      current = [];
++    count = 0,
++    current = [];
+   if (sharedConfig.context) {
+     while (end) {
+       if (end.nodeType === 8) {
+         const v = end.nodeValue;
+-        if (v === "#") count++;else if (v === "/") {
++        if (v === "#") count++;
++        else if (v === "/") {
+           if (count === 0) return [end, current];
+           count--;
+         }
+@@ -278,10 +746,7 @@ function getNextMarker(start) {
+ function runHydrationEvents() {
+   if (sharedConfig.events && !sharedConfig.events.queued) {
+     queueMicrotask(() => {
+-      const {
+-        completed,
+-        events
+-      } = sharedConfig;
++      const { completed, events } = sharedConfig;
+       events.queued = false;
+       while (events.length) {
+         const [el, e] = events[0];
+@@ -298,7 +763,8 @@ function toPropertyName(name) {
+ }
+ function toggleClassKey(node, key, value) {
+   const classNames = key.trim().split(/\s+/);
+-  for (let i = 0, nameLen = classNames.length; i < nameLen; i++) node.classList.toggle(classNames[i], value);
++  for (let i = 0, nameLen = classNames.length; i < nameLen; i++)
++    node.classList.toggle(classNames[i], value);
+ }
+ function assignProp(node, prop, value, prev, isSVG, skipRef) {
+   let isCE, isProp, isChildProp;
+@@ -328,32 +794,41 @@ function assignProp(node, prop, value, prev, isSVG, skipRef) {
+       addEventListener(node, name, value, delegate);
+       delegate && delegateEvents([name]);
+     }
+-  } else if ((isChildProp = ChildProperties.has(prop)) || !isSVG && (PropAliases[prop] || (isProp = Properties.has(prop))) || (isCE = node.nodeName.includes("-"))) {
+-    if (prop === "class" || prop === "className") className(node, value);else if (isCE && !isProp && !isChildProp) node[toPropertyName(prop)] = value;else node[PropAliases[prop] || prop] = value;
++  } else if (
++    (isChildProp = ChildProperties.has(prop)) ||
++    (!isSVG && (PropAliases[prop] || (isProp = Properties.has(prop)))) ||
++    (isCE = node.nodeName.includes("-"))
++  ) {
++    if (prop === "class" || prop === "className") className(node, value);
++    else if (isCE && !isProp && !isChildProp)
++      node[toPropertyName(prop)] = value;
++    else node[PropAliases[prop] || prop] = value;
+   } else {
+-    const ns = isSVG && prop.indexOf(":") > -1 && SVGNamespace[prop.split(":")[0]];
+-    if (ns) setAttributeNS(node, ns, prop, value);else setAttribute(node, Aliases[prop] || prop, value);
++    const ns =
++      isSVG && prop.indexOf(":") > -1 && SVGNamespace[prop.split(":")[0]];
++    if (ns) setAttributeNS(node, ns, prop, value);
++    else setAttribute(node, Aliases[prop] || prop, value);
+   }
+   return value;
+ }
+ function eventHandler(e) {
+   const key = `$$${e.type}`;
+-  let node = e.composedPath && e.composedPath()[0] || e.target;
++  let node = (e.composedPath && e.composedPath()[0]) || e.target;
+   if (e.target !== node) {
+     Object.defineProperty(e, "target", {
+       configurable: true,
+-      value: node
++      value: node,
+     });
+   }
+   Object.defineProperty(e, "currentTarget", {
+     configurable: true,
+     get() {
+       return node || document;
+-    }
++    },
+   });
+   if (sharedConfig.registry && !sharedConfig.done) {
+     sharedConfig.done = true;
+-    document.querySelectorAll("[id^=pl-]").forEach(elem => elem.remove());
++    document.querySelectorAll("[id^=pl-]").forEach((elem) => elem.remove());
+   }
+   while (node !== null) {
+     const handler = node[key];
+@@ -362,13 +837,23 @@ function eventHandler(e) {
+       data !== undefined ? handler.call(node, data, e) : handler.call(node, e);
+       if (e.cancelBubble) return;
+     }
+-    node = node.host && node.host !== node && node.host instanceof Node ? node.host : node.parentNode;
++    node =
++      node.host && node.host !== node && node.host?.childNodes
++        ? node.host
++        : node.parentNode;
+   }
+ }
+ function spreadExpression(node, props, prevProps = {}, isSVG, skipChildren) {
+   props || (props = {});
+   if (!skipChildren && "children" in props) {
+-    createRenderEffect(() => prevProps.children = insertExpression(node, props.children, prevProps.children));
++    createRenderEffect(
++      () =>
++        (prevProps.children = insertExpression(
++          node,
++          props.children,
++          prevProps.children
++        ))
++    );
+   }
+   props.ref && props.ref(node);
+   createRenderEffect(() => assign(node, props, isSVG, true, prevProps, true));
+@@ -379,8 +864,8 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+   while (typeof current === "function") current = current();
+   if (value === current) return current;
+   const t = typeof value,
+-        multi = marker !== undefined;
+-  parent = multi && current[0] && current[0].parentNode || parent;
++    multi = marker !== undefined;
++  parent = (multi && current[0] && current[0].parentNode) || parent;
+   if (t === "string" || t === "number") {
+     if (sharedConfig.context) return current;
+     if (t === "number") value = value.toString();
+@@ -409,13 +894,15 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+     const array = [];
+     const currentArray = current && Array.isArray(current);
+     if (normalizeIncomingArray(array, value, current, unwrapArray)) {
+-      createRenderEffect(() => current = insertExpression(parent, array, current, marker, true));
++      createRenderEffect(
++        () => (current = insertExpression(parent, array, current, marker, true))
++      );
+       return () => current;
+     }
+     if (sharedConfig.context) {
+       if (!array.length) return current;
+       for (let i = 0; i < array.length; i++) {
+-        if (array[i].parentNode) return current = array;
++        if (array[i].parentNode) return (current = array);
+       }
+     }
+     if (array.length === 0) {
+@@ -430,31 +917,39 @@ function insertExpression(parent, value, current, marker, unwrapArray) {
+       appendNodes(parent, array);
+     }
+     current = array;
+-  } else if (value instanceof Node) {
+-    if (sharedConfig.context && value.parentNode) return current = multi ? [value] : value;
++  } else if (value.childNodes) {
++    if (sharedConfig.context && value.parentNode)
++      return (current = multi ? [value] : value);
+     if (Array.isArray(current)) {
+-      if (multi) return current = cleanChildren(parent, current, marker, value);
++      if (multi)
++        return (current = cleanChildren(parent, current, marker, value));
+       cleanChildren(parent, current, null, value);
+     } else if (current == null || current === "" || !parent.firstChild) {
+       parent.appendChild(value);
+     } else parent.replaceChild(value, parent.firstChild);
+     current = value;
+-  } else ;
++  } else;
+   return current;
+ }
+ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   let dynamic = false;
+   for (let i = 0, len = array.length; i < len; i++) {
+     let item = array[i],
+-        prev = current && current[i];
+-    if (item instanceof Node) {
++      prev = current && current[i];
++    if (item.childNodes) {
+       normalized.push(item);
+-    } else if (item == null || item === true || item === false) ; else if (Array.isArray(item)) {
++    } else if (item == null || item === true || item === false);
++    else if (Array.isArray(item)) {
+       dynamic = normalizeIncomingArray(normalized, item, prev) || dynamic;
+-    } else if ((typeof item) === "function") {
++    } else if (typeof item === "function") {
+       if (unwrap) {
+         while (typeof item === "function") item = item();
+-        dynamic = normalizeIncomingArray(normalized, Array.isArray(item) ? item : [item], Array.isArray(prev) ? prev : [prev]) || dynamic;
++        dynamic =
++          normalizeIncomingArray(
++            normalized,
++            Array.isArray(item) ? item : [item],
++            Array.isArray(prev) ? prev : [prev]
++          ) || dynamic;
+       } else {
+         normalized.push(item);
+         dynamic = true;
+@@ -469,10 +964,11 @@ function normalizeIncomingArray(normalized, array, current, unwrap) {
+   return dynamic;
+ }
+ function appendNodes(parent, array, marker) {
+-  for (let i = 0, len = array.length; i < len; i++) parent.insertBefore(array[i], marker);
++  for (let i = 0, len = array.length; i < len; i++)
++    parent.insertBefore(array[i], marker);
+ }
+ function cleanChildren(parent, current, marker, replacement) {
+-  if (marker === undefined) return parent.textContent = "";
++  if (marker === undefined) return (parent.textContent = "");
+   const node = replacement || document.createTextNode("");
+   if (current.length) {
+     let inserted = false;
+@@ -480,7 +976,11 @@ function cleanChildren(parent, current, marker, replacement) {
+       const el = current[i];
+       if (node !== el) {
+         const isParent = el.parentNode === parent;
+-        if (!inserted && !i) isParent ? parent.replaceChild(node, el) : parent.insertBefore(node, marker);else isParent && el.remove();
++        if (!inserted && !i)
++          isParent
++            ? parent.replaceChild(node, el)
++            : parent.insertBefore(node, marker);
++        else isParent && el.remove();
+       } else inserted = true;
+     }
+   } else parent.insertBefore(node, marker);
+@@ -491,7 +991,8 @@ function gatherHydratable(element, root) {
+   for (let i = 0; i < templates.length; i++) {
+     const node = templates[i];
+     const key = node.getAttribute("data-hk");
+-    if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key)) sharedConfig.registry.set(key, node);
++    if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key))
++      sharedConfig.registry.set(key, node);
+   }
+ }
+ function getHydrationKey() {
+@@ -504,7 +1005,9 @@ function NoHydration(props) {
+ function voidFn() {}
+ 
+ function throwInBrowser(func) {
+-  const err = new Error(`${func.name} is not supported in the browser, returning undefined`);
++  const err = new Error(
++    `${func.name} is not supported in the browser, returning undefined`
++  );
+   console.error(err);
+ }
+ function renderToString(fn, options) {
+@@ -529,18 +1032,18 @@ function ssrSpread(props, isSVG, skipChildren) {}
+ const isServer = false;
+ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+ function createElement(tagName, isSVG = false) {
+-  return isSVG ? document.createElementNS(SVG_NAMESPACE, tagName) : document.createElement(tagName);
++  return isSVG
++    ? document.createElementNS(SVG_NAMESPACE, tagName)
++    : document.createElement(tagName);
+ }
+ const hydrate = (...args) => {
+   enableHydration();
+   return hydrate$1(...args);
+ };
+ function Portal(props) {
+-  const {
+-    useShadow
+-  } = props,
+-        marker = document.createTextNode(""),
+-        mount = props.mount || document.body;
++  const { useShadow } = props,
++    marker = document.createTextNode(""),
++    mount = props.mount || document.body;
+   function renderPortal() {
+     if (sharedConfig.context) {
+       const [s, set] = createSignal(false);
+@@ -551,19 +1054,25 @@ function Portal(props) {
+   if (mount instanceof HTMLHeadElement) {
+     const [clean, setClean] = createSignal(false);
+     const cleanup = () => setClean(true);
+-    createRoot(dispose => insert(mount, () => !clean() ? renderPortal()() : dispose(), null));
++    createRoot((dispose) =>
++      insert(mount, () => (!clean() ? renderPortal()() : dispose()), null)
++    );
+     onCleanup(() => {
+-      if (sharedConfig.context) queueMicrotask(cleanup);else cleanup();
++      if (sharedConfig.context) queueMicrotask(cleanup);
++      else cleanup();
+     });
+   } else {
+     const container = createElement(props.isSVG ? "g" : "div", props.isSVG),
+-          renderRoot = useShadow && container.attachShadow ? container.attachShadow({
+-      mode: "open"
+-    }) : container;
++      renderRoot =
++        useShadow && container.attachShadow
++          ? container.attachShadow({
++              mode: "open",
++            })
++          : container;
+     Object.defineProperty(container, "host", {
+       get() {
+         return marker.parentNode;
+-      }
++      },
+     });
+     insert(renderRoot, renderPortal());
+     mount.appendChild(container);
+@@ -582,11 +1091,66 @@ function Dynamic(props) {
+         return untrack(() => component(others));
+       case "string":
+         const isSvg = SVGElements.has(component);
+-        const el = sharedConfig.context ? getNextElement() : createElement(component, isSvg);
++        const el = sharedConfig.context
++          ? getNextElement()
++          : createElement(component, isSvg);
+         spread(el, others, isSvg);
+         return el;
+     }
+   });
+ }
+ 
+-export { Aliases, voidFn as Assets, ChildProperties, DOMElements, DelegatedEvents, Dynamic, voidFn as HydrationScript, NoHydration, Portal, PropAliases, Properties, SVGElements, SVGNamespace, addEventListener, assign, classList, className, clearDelegatedEvents, delegateEvents, dynamicProperty, escape, voidFn as generateHydrationScript, voidFn as getAssets, getHydrationKey, getNextElement, getNextMarker, getNextMatch, hydrate, innerHTML, insert, isServer, memo, render, renderToStream, renderToString, renderToStringAsync, resolveSSRNode, runHydrationEvents, setAttribute, setAttributeNS, spread, ssr, ssrAttribute, ssrClassList, ssrElement, ssrHydrationKey, ssrSpread, ssrStyle, style, template, use, voidFn as useAssets };
++export {
++  Aliases,
++  voidFn as Assets,
++  ChildProperties,
++  DOMElements,
++  DelegatedEvents,
++  Dynamic,
++  voidFn as HydrationScript,
++  NoHydration,
++  Portal,
++  PropAliases,
++  Properties,
++  SVGElements,
++  SVGNamespace,
++  addEventListener,
++  assign,
++  classList,
++  className,
++  clearDelegatedEvents,
++  delegateEvents,
++  dynamicProperty,
++  escape,
++  voidFn as generateHydrationScript,
++  voidFn as getAssets,
++  getHydrationKey,
++  getNextElement,
++  getNextMarker,
++  getNextMatch,
++  hydrate,
++  innerHTML,
++  insert,
++  isServer,
++  memo,
++  render,
++  renderToStream,
++  renderToString,
++  renderToStringAsync,
++  resolveSSRNode,
++  runHydrationEvents,
++  setAttribute,
++  setAttributeNS,
++  spread,
++  ssr,
++  ssrAttribute,
++  ssrClassList,
++  ssrElement,
++  ssrHydrationKey,
++  ssrSpread,
++  ssrStyle,
++  style,
++  template,
++  use,
++  voidFn as useAssets,
++};
+\ No newline at end of file
+diff --git a/node_modules/solid-js/web/package.json b/node_modules/solid-js/web/package.json
+deleted file mode 100644
+index 4c6dc0a..0000000
+--- a/node_modules/solid-js/web/package.json
++++ /dev/null
+@@ -1,50 +0,0 @@
+-{
+-  "name": "solid-js/web",
+-  "main": "./dist/server.cjs",
+-  "module": "./dist/server.js",
+-  "browser": {
+-    "./dist/server.cjs": "./dist/web.cjs",
+-    "./dist/server.js": "./dist/web.js"
+-  },
+-  "unpkg": "./dist/web.cjs",
+-  "types": "./types/index.d.ts",
+-  "type": "module",
+-  "sideEffects": false,
+-  "exports": {
+-    ".": {
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./types/index.d.ts",
+-            "default": "./dist/dev.js"
+-          },
+-          "require": "./dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/web.js"
+-        },
+-        "require": "./dist/web.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+-      "development": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/dev.js"
+-        },
+-        "require": "./dist/dev.cjs"
+-      },
+-      "import": {
+-        "types": "./types/index.d.ts",
+-        "default": "./dist/web.js"
+-      },
+-      "require": "./dist/web.cjs"
+-    }
+-  }
+-}

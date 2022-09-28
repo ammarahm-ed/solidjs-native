@@ -1,12 +1,14 @@
 {
   "name": "solid-nativescript",
-  "main": "src/app.tsx",
+  "main": "src/index.tsx",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@jalik/benchmark": "^2.0.1",
     "@nativescript/core": "~8.3.0",
     "babel-preset-solid": "^1.5.4",
-    "dominative": "^0.0.3-alpha.2",
+    "dominative": "https://github.com/SudoMaker/dominative",
+    "node-html-parser": "^6.0.0",
     "solid-js": "^1.5.4"
   },
   "devDependencies": {
@@ -17,11 +19,11 @@
     "@nativescript/android": "8.3.1",
     "@nativescript/types": "~8.3.0",
     "@nativescript/webpack": "~5.0.6",
-    "@types/react": "18.0.18",
     "babel": "^6.23.0",
     "babel-loader": "^8.2.5",
     "core-js": "^3.25.0",
     "patch-package": "~6.4.7",
+    "solid-refresh": "^0.4.1",
     "typescript": "~4.5.5"
   },
   "scripts": {

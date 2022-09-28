@@ -1,0 +1,50 @@
+{
+  "new FlexboxLayout()": {
+    "average": 46.52520314999623,
+    "fastest": 42.10473900008947,
+    "ips": 21.493726674895367,
+    "ipsAccuracy": 0.4937266748953668,
+    "ipsRounded": 21,
+    "iterations": 100,
+    "median": 45.647109500016086,
+    "slowest": 61.38697999995202,
+    "total": 4652.520314999623,
+    "rank": 1
+  },
+  "document.createElement": {
+    "average": 51.69232914000517,
+    "fastest": 46.8103650000412,
+    "ips": 19.34523006869294,
+    "ipsAccuracy": 0.3452300686929384,
+    "ipsRounded": 19,
+    "iterations": 100,
+    "median": 50.32075499999337,
+    "slowest": 69.21432200004347,
+    "total": 5169.232914000517,
+    "rank": 2
+  },
+  "nativeView.addChild": {
+    "average": 56.00507184998365,
+    "fastest": 48.59411499998532,
+    "ips": 17.855525704504423,
+    "ipsAccuracy": -0.1444742954955771,
+    "ipsRounded": 18,
+    "iterations": 100,
+    "median": 54.62127550004516,
+    "slowest": 84.21010399982333,
+    "total": 5600.507184998365,
+    "rank": 3
+  },
+  "document.appendChild": {
+    "average": 64.6303707999899,
+    "fastest": 57.122811999870464,
+    "ips": 15.472601930362995,
+    "ipsAccuracy": 0.4726019303629947,
+    "ipsRounded": 15,
+    "iterations": 100,
+    "median": 62.75559850002173,
+    "slowest": 100.27484399988316,
+    "total": 6463.0370799989905,
+    "rank": 4
+  }
+}
