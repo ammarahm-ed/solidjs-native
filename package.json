@@ -1,15 +1,18 @@
 {
   "name": "solid-nativescript",
-  "main": "src/index.tsx",
+  "main": "src/index.jsx",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@dominative/solid": "^0.0.1-alpha.2",
     "@jalik/benchmark": "^2.0.1",
     "@nativescript/core": "~8.3.0",
-    "babel-preset-solid": "^1.5.4",
-    "dominative": "https://github.com/SudoMaker/dominative",
+    "@nativescript/theme": "^3.0.2",
+    "babel-preset-solid": "^1.5.7",
+    "dominative": "^0.0.5-alpha.2",
     "node-html-parser": "^6.0.0",
-    "solid-js": "^1.5.4"
+    "solid-js": "^1.5.7",
+    "undom-ng": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",

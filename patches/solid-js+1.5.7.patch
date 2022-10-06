@@ -1,0 +1,53 @@
+diff --git a/node_modules/solid-js/package.json b/node_modules/solid-js/package.json
+index aed77ee..1ba17b0 100644
+--- a/node_modules/solid-js/package.json
++++ b/node_modules/solid-js/package.json
+@@ -44,48 +44,6 @@
+   ],
+   "exports": {
+     ".": {
+-      "worker": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+-      "browser": {
+-        "development": {
+-          "import": {
+-            "types": "./types/index.d.ts",
+-            "default": "./dist/dev.js"
+-          },
+-          "require": "./dist/dev.cjs"
+-        },
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/solid.js"
+-        },
+-        "require": "./dist/solid.cjs"
+-      },
+-      "deno": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+-      "node": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/server.js"
+-        },
+-        "require": "./dist/server.cjs"
+-      },
+-      "development": {
+-        "import": {
+-          "types": "./types/index.d.ts",
+-          "default": "./dist/dev.js"
+-        },
+-        "require": "./dist/dev.cjs"
+-      },
+       "import": {
+         "types": "./types/index.d.ts",
+         "default": "./dist/solid.js"

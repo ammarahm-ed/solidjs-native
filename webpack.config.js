@@ -3,92 +3,55 @@ const {
   getPlatformName,
 } = require("@nativescript/webpack/dist/helpers/platform");
 
-module.exports = (env) => {
-  webpack.init(env);
-  webpack.useConfig("base");
-  const config = solid(webpack.resolveChainableConfig(), env);
-  return config.toConfig();
-};
-
-/**
- *
- * @param {import('webpack-chain')} config
- * @param {*} env
- * @returns
- */
-function solid(config, env) {
+const solid = (config) => {
   const platform = getPlatformName();
-  const mode = env.production ? "production" : "development";
-  const production = mode === "production";
-  console.log("mode", production);
+
   config.resolve.extensions
     .prepend(".tsx")
-    .prepend(".ts")
-    .prepend(".js")
-    .prepend(".jsx")
     .prepend(`.${platform}.tsx`)
-    .prepend(`.${platform}.ts`)
-    .prepend(`.${platform}.js`);
+    .prepend(`.${platform}.ts`);
 
-  if (mode === "development") {
-    config.output.devtoolNamespace("app");
-    config.devServer.hotOnly(true);
-    config.devServer.hot(true);
-    config.module
-      .rule("ts")
-      .test(/\.(t|j)sx?$/)
-      .exclude.add(/node_modules/)
-      .end()
-      .use("babel-loader")
-      .loader("babel-loader")
-      .options({
-        babelrc: false,
-        configFile: false,
-        presets: [
-          "solid",
-          "@babel/typescript",
-          [
-            "@babel/env",
-            {
-              useBuiltIns: "usage",
-              corejs: "3.25.0",
-            },
-          ],
-        ],
-        plugins: [
-          [
-            "solid-refresh/babel",
-            {
-              bundler: "webpack5",
-            },
-          ],
-        ],
-      });
-  } else {
-    config.optimization.minimize(false);
-    config.module
-      .rule("ts")
-      .test(/\.(t|j)sx?$/)
-      .exclude.add(/node_modules/)
-      .end()
-      .use("babel-loader")
-      .loader("babel-loader")
-      .options({
-        babelrc: false,
-        configFile: false,
-        presets: [
-          "solid",
-          "@babel/typescript",
-          [
-            "@babel/env",
-            {
-              useBuiltIns: "usage",
-              corejs: "3.25.0",
-            },
-          ],
-        ],
-      });
-  }
+  config.output.devtoolNamespace("app");
+  config.optimization.minimize(false);
+  config.optimization.usedExports(false);
+  config.optimization.providedExports(false);
+  config.optimization.end();
+  config.devServer.hotOnly(true);
+  config.devServer.hot(true);
 
-  return config;
-}
+  config.module
+    .rule("bundle-source")
+    .test(/\.(|t|j)sx?$/)
+    .exclude.add(/node_modules/)
+    .end()
+    .use("babel-loader")
+    .loader("babel-loader")
+    .before("ts-loader")
+    .options({
+      babelrc: false,
+      configFile: false,
+      presets: [
+        [
+          "babel-preset-solid",
+          {
+            moduleName: "@dominative/solid",
+            generate: "universal",
+          },
+        ],
+      ],
+      plugins: [
+        [
+          "solid-refresh/babel",
+          {
+            bundler: "webpack5",
+          },
+        ],
+      ],
+    });
+};
+
+module.exports = (env) => {
+  webpack.init(env);
+  webpack.chainWebpack(solid);
+  return webpack.resolveConfig();
+};
