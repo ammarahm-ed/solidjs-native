@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@dominative/solid": "^0.0.1-alpha.2",
+    "@dominative/solid": "^0.0.2-alpha.2",
     "@jalik/benchmark": "^2.0.1",
     "@nativescript/core": "~8.3.0",
     "@nativescript/theme": "^3.0.2",
